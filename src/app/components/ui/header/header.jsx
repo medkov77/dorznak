@@ -11,56 +11,72 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import Typography from "@mui/material/Typography";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 const Header = () => {
-  return (
-    <Box sx={{ p: 2, backgroundColor: "#f0f0f0" }}>
-      <Container maxWidth="xl">
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Grid item xs={3}>
-            <Item>
-              <img src={logo} alt="logo" className="logo"></img>
-            </Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item>
-              <Grid container spacing={2} alignItems="center" mb={2}>
-                <PhoneIcon color="primary" />
-                <Typography variant="subtitle1" component="div" ml={1}>
-                  Телефон: +79423266915
-                </Typography>
-              </Grid>
-              <Grid container spacing={2} alignItems="center">
-                <MailIcon color="primary" />
-                <Typography variant="subtitle1" component="div" ml={1}>
-                  e-mail: medkov77@mail.ru
-                </Typography>
-              </Grid>
-            </Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item>
-              <Grid container spacing={2} alignItems="center">
-                <MenuBookIcon color="primary" />
-                <Typography variant="h6" component="div" ml={1}>
-                  Скачать прайслист
-                </Typography>
-              </Grid>
-            </Item>
-          </Grid>
-          <Grid item xs={1}>
-            <Item>
-              <Badge badgeContent={4} color="primary">
-                <ShoppingCartIcon color="action" fontSize="large" />
-              </Badge>
-            </Item>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
-  );
+    return (
+        <Box sx={{ p: 2, backgroundColor: "#f0f0f0" }}>
+            <Container maxWidth="xl">
+                <Grid
+                    container
+                    spacing={2}
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Grid item xs={3}>
+                        <Item>
+                            <img src={logo} alt="logo" className="logo"></img>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Item>
+                            <Grid
+                                container
+                                spacing={2}
+                                alignItems="center"
+                                mb={2}
+                            >
+                                <PhoneIcon color="primary" />
+                                <Typography
+                                    variant="subtitle1"
+                                    component="div"
+                                    ml={1}
+                                >
+                                    Телефон: +79423266915
+                                </Typography>
+                            </Grid>
+                            <Grid container spacing={2} alignItems="center">
+                                <MailIcon color="primary" />
+                                <Typography
+                                    variant="subtitle1"
+                                    component="div"
+                                    ml={1}
+                                >
+                                    e-mail: medkov77@mail.ru
+                                </Typography>
+                            </Grid>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Item>
+                            <Grid container spacing={2} alignItems="center">
+                                <MenuBookIcon color="primary" />
+                                <Typography variant="h6" component="div" ml={1}>
+                                    Скачать прайслист
+                                </Typography>
+                            </Grid>
+                        </Item>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Item>
+                            <Badge badgeContent={4} color="primary">
+                                <ShoppingCartIcon
+                                    color="action"
+                                    fontSize="large"
+                                />
+                            </Badge>
+                        </Item>
+                    </Grid>
+                </Grid>
+            </Container>
+        </Box>
+    );
 };
 export default Header;
