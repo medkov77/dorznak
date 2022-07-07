@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Paper,
@@ -10,6 +10,8 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
+import { getPrice, loadPriceListList } from "../../../../store/priceList";
+import { useSelector, useDispatch } from "react-redux";
 const SignsPage = ({
   id,
   gost,
@@ -20,9 +22,20 @@ const SignsPage = ({
   description,
   imgSrc,
 }) => {
+  const dispatch = useDispatch();
+
   const [data, setData] = useState({ size: 2, filmeType: "aKom" });
+  useEffect(() => {
+    dispatch(loadPriceListList());
+  }, []);
+  const [price, setPrice] = useState(
+    useSelector(getPrice("signs", form, data.size, data.filmeType))
+  );
+
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
+
+    setPrice(getPrice("signs", form, data.size, data.filmeType));
     console.log(data);
   };
 
@@ -38,7 +51,12 @@ const SignsPage = ({
         <img src={imgSrc} alt="1-1" className="card-img" />
         <Box
           p={1}
-          sx={{ position: "absolute", bottom: "1rem", left: "0", right: "0" }}
+          sx={{
+            position: "absolute",
+            bottom: "1rem",
+            left: "0",
+            right: "0",
+          }}
         >
           <FormControl>
             <FormLabel id="size-radio-buttons-group">Типоразмер</FormLabel>
@@ -84,8 +102,17 @@ const SignsPage = ({
               </div>
             </RadioGroup>
           </FormControl>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 2,
+            }}
+          >
             <button className="card-btn">В корзину</button>
+            <Typography variant="h6" component={"h4"}>
+              цена {price}
+            </Typography>
             <button className="card-btn">Подробнее</button>
           </Box>
         </Box>
