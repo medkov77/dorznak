@@ -10,8 +10,8 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
-import { getPrice, loadPriceListList } from "../../../../store/priceList";
-import { useSelector, useDispatch } from "react-redux";
+import { getPrice, getCurrentPrice } from "../../../../store/priceList";
+import { useDispatch, useSelector } from "react-redux";
 const SignsPage = ({
   id,
   gost,
@@ -23,20 +23,21 @@ const SignsPage = ({
   imgSrc,
 }) => {
   const dispatch = useDispatch();
-
-  const [data, setData] = useState({ size: 2, filmeType: "aKom" });
-  useEffect(() => {
-    dispatch(loadPriceListList());
-  }, []);
+  const [data, setData] = useState({ size: 2, filmeType: "aCom" });
   const [price, setPrice] = useState(
     useSelector(getPrice("signs", form, data.size, data.filmeType))
   );
 
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
-
-    setPrice(getPrice("signs", form, data.size, data.filmeType));
-    console.log(data);
+    dispatch(
+      getCurrentPrice({
+        name: "signs",
+        form: form,
+        size: data.size,
+        film: data.filmeType,
+      })
+    );
   };
 
   return (
@@ -120,4 +121,5 @@ const SignsPage = ({
     </Paper>
   );
 };
+
 export default SignsPage;
