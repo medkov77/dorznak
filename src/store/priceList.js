@@ -14,8 +14,8 @@ const priceListSlice = createSlice({
         },
         priceListReceived: (state, action) => {
             state.entities = action.payload;
-            state.lastFetch = Date.now();
             state.isLoading = false;
+            console.log(action.payload);
         },
         priceListRequestFailed: (state, action) => {
             state.error = action.payload;
@@ -30,22 +30,26 @@ const { priceListRequested, priceListReceived, priceListRequestFailed } =
 
 export const loadPriceListList = () => async (dispatch, getState) => {
     dispatch(priceListRequested());
+    const content = getPricesList();
+    console.log(content);
+    dispatch(priceListReceived(content));
     try {
-        const content = await getPricesList();
+        const content = getPricesList();
+        console.log(content);
         dispatch(priceListReceived(content));
     } catch (error) {
         dispatch(priceListRequestFailed(error.message));
     }
 };
 
-export const getPrice = (name, form, size, film) => state =>
-    state.priceList.entities[name][form][size][film];
+export const getPrice = (name, form, size, film) => state => {
+    const currentPrice =
+        state.priceList.entities[name].form[form].size[size][film];
+
+    console.log("cur", currentPrice, film);
+    return currentPrice;
+};
 export const getpriceListLoadingStatus = () => state =>
     state.priceList.isLoading;
-export const getProfessionById = id => state => {
-    if (state.priceList.entities) {
-        return state.priceList.entities.find(p => p._id === id);
-    }
-};
 
 export default priceListReducer;

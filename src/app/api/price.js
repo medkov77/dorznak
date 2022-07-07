@@ -37,5 +37,6 @@ const priceList = {
 };
 
 export default function getPricesList() {
-    setTimeout(() => priceList, 500);
+    console.log(priceList.signs.form.triangle.size[1].aCom, "begin");
+    return priceList;
 }

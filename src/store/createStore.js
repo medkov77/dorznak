@@ -1,13 +1,14 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import priceListReducer from "./priceList";
+import signsReducer from "./signs";
 
 const rootReducer = combineReducers({
-  signs: signsReducer,
-  idn: idnReducer,
-  base: baseReducer,
+    priceList: priceListReducer,
+    signs: signsReducer,
 });
 
 export function createStore() {
-  return configureStore({
-    reducer: rootReducer,
-  });
+    return configureStore({
+        reducer: rootReducer,
+    });
 }

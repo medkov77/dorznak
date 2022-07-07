@@ -10,8 +10,12 @@ import {
     FormControlLabel,
 } from "@mui/material";
 import { useState } from "react";
-import { getPrice, loadPriceListList } from "../../../../store/priceList";
-import { useDispatch, useSelect } from "react-redux";
+import {
+    getPrice,
+    loadPriceListList,
+    getpriceListLoadingStatus,
+} from "../../../../store/priceList";
+import { useDispatch, useSelector } from "react-redux";
 const SignsPage = ({
     id,
     gost,
@@ -23,13 +27,11 @@ const SignsPage = ({
     imgSrc,
 }) => {
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(loadPriceListList);
-    }, []);
-    const [data, setData] = useState({ size: 2, filmeType: "aKom" });
+    const [data, setData] = useState({ size: 2, filmeType: "aCom" });
     const [price, setPrice] = useState(
-        useSelect(getPrice("signs", form, data.size, data.filmeType))
+        useSelector(getPrice("signs", form, data.size, data.filmeType))
     );
+
     const handleChange = ({ target }) => {
         setData({ ...data, [target.name]: target.value });
 
@@ -120,7 +122,7 @@ const SignsPage = ({
                     >
                         <button className="card-btn">В корзину</button>
                         <Typography variant="h6" component={"h4"}>
-                            цена
+                            цена {price}
                         </Typography>
                         <button className="card-btn">Подробнее</button>
                     </Box>
