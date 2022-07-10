@@ -10,6 +10,7 @@ const AppLoader = ({ children }) => {
   useEffect(() => {
     dispatch(loadPriceListList());
   }, [dispatch]);
+
   const loading = useSelector(getpriceListLoadingStatus());
   if (loading) return "Loading";
   return children;

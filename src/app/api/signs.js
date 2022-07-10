@@ -80,4 +80,6 @@ const signs = [
   },
 ];
 
-export default signs;
+export default function getSigns() {
+  return signs;
+}

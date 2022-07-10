@@ -9,6 +9,7 @@ import ParkingPage from "../pages/parkingPage";
 import FlashlightsPage from "../pages/flashlightsPage";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "../pages/mainPage";
+import SignPage from "../pages/signs/signPage";
 
 const MainContent = () => {
   return (
@@ -21,6 +22,9 @@ const MainContent = () => {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="signs" element={<SignsList />} />
+
+            <Route path="signs/:id/:size/:film" element={<SignPage />} />
+
             <Route path="base" element={<BaseOfSingnsPage />} />
             <Route path="led" element={<LedSignsPage />} />
             <Route path="idn" element={<IdnPage />} />
