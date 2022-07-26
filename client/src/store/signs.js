@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import getSigns from "../app/api/signs";
+import signsService from "../app/services/signs.service";
 const signsSlice = createSlice({
   name: "signs",
   initialState: {
@@ -26,10 +26,8 @@ const signsSlice = createSlice({
 const { reducer: signsReducer, actions } = signsSlice;
 const { signsRequested, signsReceived, signsRequestFailed } = actions;
 export const loadSigns = () => async (dispatch, getState) => {
-  dispatch(signsRequested());
-
   try {
-    const content = getSigns();
+    const { content } = await signsService.get();
     dispatch(signsReceived(content));
   } catch (error) {
     dispatch(signsRequestFailed(error.message));

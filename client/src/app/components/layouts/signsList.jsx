@@ -25,10 +25,10 @@ const SignsList = () => {
       </Typography>
       <Grid container spacing={3} mt={2}>
         {signsList.map((sign) => (
-          <Grid key={sign.id} item xs={4}>
+          <Grid key={sign._id} item xs={4}>
             <Item>
               <SignsPage
-                id={sign.id}
+                id={sign._id}
                 gost={sign.gost}
                 name={sign.name}
                 form={sign.form}

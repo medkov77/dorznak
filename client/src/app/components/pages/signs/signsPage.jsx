@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { getSignsPrice } from "../../../../store/priceList";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const SignsPage = ({
   id,
@@ -47,7 +47,11 @@ const SignsPage = ({
         <Typography variant="h6" component={"h4"}>
           {name}
         </Typography>
-        <img src={imgSrc} alt="1-1" className="card-img" />
+        <img
+          src={`${process.env.PUBLIC_URL}/${imgSrc}`}
+          alt="1-1"
+          className="card-img"
+        />
         <Box
           p={1}
           sx={{
