@@ -10,6 +10,8 @@ import FlashlightsPage from "../pages/flashlightsPage";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "../pages/mainPage";
 import SignPage from "../pages/signs/signPage";
+import RegisterForm from "../ui/registredForm";
+import LoginForm from "../ui/loginForm";
 
 const MainContent = () => {
   return (
@@ -30,6 +32,8 @@ const MainContent = () => {
             <Route path="idn" element={<IdnPage />} />
             <Route path="parking" element={<ParkingPage />} />
             <Route path="flash" element={<FlashlightsPage />} />
+            <Route path="signup" element={<RegisterForm />} />
+            <Route path="login" element={<LoginForm />} />
           </Routes>
         </Grid>
       </Grid>
