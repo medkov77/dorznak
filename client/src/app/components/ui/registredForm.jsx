@@ -1,4 +1,7 @@
-import React, { useState, MouseEvent } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { signUp, getIsLoggedIn } from "../../../store/users";
+import { validator } from "../../utils/validator";
 import { Paper } from "@mui/material";
 import { Box, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
@@ -7,33 +10,96 @@ import Input from "@mui/material/Input";
 import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
-  const [values, setValues] = useState({
-    amount: "",
-    email: "fff",
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(getIsLoggedIn());
+
+  const [data, setData] = useState({
+    name: "",
+    email: "",
     password: "",
-    weight: "",
-    weightRange: "",
+    company: "",
     showPassword: false,
   });
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (target) => {
-    // setValues((prevState) => ({
-    //   ...prevState,
-    //   [target.name]: target.value,
-    // }));
+  const handleChange = ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
+
   const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
+    setData((prevState) => ({
+      ...prevState,
+      showPassword: !prevState.showPassword,
+    }));
+  };
+  const handleBack = () => {
+    navigate(-1);
+  };
+  const validatorConfig = {
+    email: {
+      isRequired: {
+        message: "Электронная почта обязательна для заполнения",
+      },
+      isEmail: {
+        message: "Email введен некорректно",
+      },
+    },
+    name: {
+      isRequired: {
+        message: "Имя обязательно для заполнения",
+      },
+      min: {
+        message: "Имя должно состоять минимум из 3 символов",
+        value: 3,
+      },
+    },
+    password: {
+      isRequired: {
+        message: "Пароль обязателен для заполнения",
+      },
+      isCapitalSymbol: {
+        message: "Пароль должен содержать хотя бы одну заглавную букву",
+      },
+      isContainDigit: {
+        message: "Пароль должен содержать хотя бы одно число",
+      },
+      min: {
+        message: "Пароль должен состоять минимум из 8 символов",
+        value: 8,
+      },
+    },
+  };
+  useEffect(() => {
+    validate();
+  }, [data]);
+  const validate = () => {
+    const errors = validator(data, validatorConfig);
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
+  const isValid = Object.keys(errors).length === 0;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const isValid = validate();
+    if (!isValid) return;
+    dispatch(signUp(data));
   };
 
   return (
@@ -46,63 +112,83 @@ const RegisterForm = () => {
       >
         Для регистрации заполните форму ниже:
       </Typography>
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
-          <OutlinedInput
+      <form onSubmit={handleSubmit}>
+        <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+          <TextField
+            required
+            id="name"
+            label="Имя"
+            variant="standard"
+            type="text"
+            value={data.name}
+            name="name"
+            margin="dense"
+            onChange={(event) => handleChange(event)}
+            error={!(errors.name === undefined)}
+            helperText={errors.name}
+            fullWidth
+          />
+          <TextField
+            required
             id="email"
+            label="Email"
+            variant="standard"
+            fullWidth
+            type="email"
+            value={data.email}
             name="email"
-            value={values.email}
-            onChange={handleChange("email")}
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              "aria-label": "Email",
-            }}
+            margin="dense"
+            onChange={(event) => handleChange(event)}
+            error={!(errors.email === undefined)}
+            helperText={errors.email}
           />
 
-          <FormHelperText id="email">Weight</FormHelperText>
-        </FormControl>
-
-        <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            value={values.weight}
-            onChange={handleChange("weight")}
-            endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              "aria-label": "weight",
-            }}
+          <Box sx={{ display: "flex", width: "100%" }}>
+            <TextField
+              required
+              id="password"
+              label="Пароль"
+              variant="standard"
+              fullWidth
+              type={data.showPassword ? "text" : "password"}
+              value={data.password}
+              name="password"
+              margin="dense"
+              onChange={(event) => handleChange(event)}
+              error={!(errors.password === undefined)}
+              helperText={errors.password}
+              className="password-field"
+            />
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={handleClickShowPassword}
+              edge="end"
+              className="passwod-icon"
+            >
+              {data.showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </Box>
+          <TextField
+            id="company"
+            label="Компания"
+            variant="standard"
+            type="text"
+            margin="dense"
+            name="company"
+            value={data.company}
+            onChange={(event) => handleChange(event)}
+            fullWidth
           />
-
-          <FormHelperText id="outlined-weight-helper-text">
-            Weight
-          </FormHelperText>
-        </FormControl>
-        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">
-            Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={handleChange("password")}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  // onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
-          />
-        </FormControl>
-      </Box>
+          <Stack spacing={2} direction="row" justifyContent="flex-end" my={3}>
+            <Button variant="contained" disabled={!isValid} type="submit">
+              Регистрация
+            </Button>
+            <Button variant="outlined" onClick={handleBack}>
+              Отмена
+            </Button>
+          </Stack>
+        </Box>
+      </form>
     </Paper>
   );
 };

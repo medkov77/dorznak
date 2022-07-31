@@ -84,3 +84,10 @@
   border-radius: 0.5rem;
   border: solid 1px #1976d2;
 }
+.password-field {
+  position: relative;
+}
+.passwod-icon {
+  position: absolute;
+  right: 0;
+}
