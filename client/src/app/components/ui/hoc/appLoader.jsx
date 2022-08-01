@@ -4,11 +4,14 @@ import {
   loadPriceListList,
   getpriceListLoadingStatus,
 } from "../../../../store/priceList";
+import { getIsLoggedIn, refresh } from "../../../../store/users";
 
 const AppLoader = ({ children }) => {
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector(getIsLoggedIn());
   useEffect(() => {
     dispatch(loadPriceListList());
+    if (isLoggedIn) dispatch(refresh());
   }, [dispatch]);
 
   const loading = useSelector(getpriceListLoadingStatus());

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, getIsLoggedIn, getUser } from "../../../store/users";
+import { login, getIsLoggedIn, getAuthError } from "../../../store/users";
 import { validator } from "../../utils/validator";
 import { Paper } from "@mui/material";
 import { Box, Typography } from "@mui/material";
@@ -22,6 +22,8 @@ const LoginForm = () => {
     password: "",
     showPassword: false,
   });
+
+  const loginError = useSelector(getAuthError());
   const [errors, setErrors] = useState({});
   const isLoggedIn = useSelector(getIsLoggedIn());
 
@@ -165,6 +167,11 @@ const LoginForm = () => {
           </Stack>
         </Box>
       </form>
+      {loginError && (
+        <Typography variant="subtitle" color={"red"}>
+          {loginError}
+        </Typography>
+      )}
     </Paper>
   );
 };

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signUp, getIsLoggedIn } from "../../../store/users";
+import { signUp, getIsLoggedIn, getAuthError } from "../../../store/users";
 import { validator } from "../../utils/validator";
 import { Paper } from "@mui/material";
 import { Box, Typography } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
-import FormHelperText from "@mui/material/FormHelperText";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -28,6 +24,7 @@ const RegisterForm = () => {
     company: "",
     showPassword: false,
   });
+  const loginError = useSelector(getAuthError());
   const [errors, setErrors] = useState({});
 
   const handleChange = ({ target }) => {
@@ -189,6 +186,11 @@ const RegisterForm = () => {
           </Stack>
         </Box>
       </form>
+      {loginError && (
+        <Typography variant="subtitle" color={"red"}>
+          {loginError}
+        </Typography>
+      )}
     </Paper>
   );
 };

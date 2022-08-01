@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getIsLoggedIn, logOut } from "../../../store/users";
+import { getIsLoggedIn, logOut, getUser } from "../../../store/users";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
@@ -28,6 +27,9 @@ const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn());
+  const user = useSelector(getUser());
+  console.log(user);
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -50,7 +52,6 @@ const NavBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -147,7 +148,10 @@ const NavBar = () => {
           </Box>
 
           {isLoggedIn ? (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
+              <Typography variant="h6" mr={2}>
+                {user.name}
+              </Typography>
               <Tooltip title="Выход">
                 <IconButton onClick={handleExit} sx={{ p: 0, color: "#fff" }}>
                   <LogoutIcon fontSize="large" />

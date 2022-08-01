@@ -2,7 +2,6 @@ import { createAction, createSlice } from "@reduxjs/toolkit";
 import userService from "../app/services/user.service";
 import authService from "../app/services/auth.service";
 import localStorageService from "../app/services/localStorage.service";
-import history from "../app/utils/history";
 import generateAuthError from "../app/utils/generateAuthError";
 const initialState = localStorageService.getAccessToken()
   ? {
@@ -45,12 +44,7 @@ const usersSlice = createSlice({
     authRequestFailed: (state, action) => {
       state.error = action.payload;
     },
-    userCreated: (state, action) => {
-      if (!Array.isArray(state.entities)) {
-        state.entities = [];
-      }
-      state.entities.push(action.payload);
-    },
+
     userLoggedOut: (state) => {
       state.entities = null;
       state.isLoggedIn = false;
@@ -71,13 +65,33 @@ const {
   usersRequestFailed,
   authRequestSuccess,
   authRequestFailed,
-  userCreated,
   userLoggedOut,
 } = actions;
 
 const authRequested = createAction("users/authRequested");
-const userCreateRequested = createAction("users/userCreateRequested");
-const createUserFailed = createAction("users/createUserFailed");
+
+export const refresh = () => async (dispatch) => {
+  dispatch(authRequested());
+  try {
+    const data = await authService.refresh();
+    dispatch(
+      authRequestSuccess({
+        userId: data.userId,
+        name: data.name,
+        company: data.company,
+      })
+    );
+    localStorageService.setTokens(data);
+  } catch (error) {
+    const { code, message } = error.response.data.error;
+    if (code === 400) {
+      const errorMessage = generateAuthError(message);
+      dispatch(authRequestFailed(errorMessage));
+    } else {
+      dispatch(authRequestFailed(error.message));
+    }
+  }
+};
 
 export const login =
   ({ payload, redirect }) =>
@@ -87,9 +101,14 @@ export const login =
     dispatch(authRequested());
     try {
       const data = await authService.login({ email, password });
-      dispatch(authRequestSuccess({ userId: data.userId }));
+      dispatch(
+        authRequestSuccess({
+          userId: data.userId,
+          name: data.name,
+          company: data.company,
+        })
+      );
       localStorageService.setTokens(data);
-      history.push("/");
     } catch (error) {
       const { code, message } = error.response.data.error;
       if (code === 400) {
@@ -113,10 +132,21 @@ export const signUp =
         company,
       });
       localStorageService.setTokens(data);
-      const userId = data.userId;
-      dispatch(authRequestSuccess({ userId }));
+      dispatch(
+        authRequestSuccess({
+          userId: data.userId,
+          name: data.name,
+          company: data.company,
+        })
+      );
     } catch (error) {
-      dispatch(authRequestFailed(error.message));
+      const { code, message } = error.response.data.error;
+      if (code === 400) {
+        const errorMessage = generateAuthError(message);
+        dispatch(authRequestFailed(errorMessage));
+      } else {
+        dispatch(authRequestFailed(error.message));
+      }
     }
   };
 export const logOut = () => (dispatch) => {
