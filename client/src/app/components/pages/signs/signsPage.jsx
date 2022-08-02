@@ -11,8 +11,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { getPriceList } from "../../../../store/priceList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { ubdateCart } from "../../../../store/cart";
 import * as signsImage from "../../../assets/img/signs/worning/";
 const SignsPage = ({
   id,
@@ -24,6 +25,7 @@ const SignsPage = ({
   description,
   imgSrc,
 }) => {
+  const dispatch = useDispatch();
   const priceList = useSelector(getPriceList());
   const signsPiceList = priceList.find((item) => item.name === "signs");
 
@@ -40,7 +42,21 @@ const SignsPage = ({
   useEffect(() => {
     setPrice(signsPiceList.form[form].size[data.size][data.filmeType]);
   }, [data]);
-
+  const handleAddCart = () => {
+    dispatch(
+      ubdateCart({
+        _id: id,
+        type: "sign",
+        gost: gost,
+        name: name,
+        size: data.size,
+        filmeType: data.filmeType,
+        imgSrc: imgSrc,
+        price: price,
+        quantity: 1,
+      })
+    );
+  };
   return (
     <Paper elevation={3} className="card" sx={{ position: "relative" }}>
       <Box p={2} sx={{ textAlign: "center" }}>
@@ -111,7 +127,9 @@ const SignsPage = ({
               mt: 2,
             }}
           >
-            <button className="card-btn">В корзину</button>
+            <button className="card-btn" onClick={handleAddCart}>
+              В корзину
+            </button>
             <Typography variant="h6" component={"h4"}>
               {`цена ${price} р`}
             </Typography>

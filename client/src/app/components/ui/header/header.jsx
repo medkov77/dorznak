@@ -10,7 +10,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PhoneIcon from "@mui/icons-material/Phone";
 import Typography from "@mui/material/Typography";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { getCartLegnth } from "../../../../store/cart";
 const Header = () => {
+    const cattLength = useSelector(getCartLegnth()) || 0;
     return (
         <Box sx={{ p: 2, backgroundColor: "#f0f0f0" }}>
             <Container maxWidth="xl">
@@ -65,14 +69,19 @@ const Header = () => {
                         </Item>
                     </Grid>
                     <Grid item xs={1}>
-                        <Item>
-                            <Badge badgeContent={4} color="primary">
-                                <ShoppingCartIcon
-                                    color="action"
-                                    fontSize="large"
-                                />
-                            </Badge>
-                        </Item>
+                        <Link to="/kart">
+                            <Item>
+                                <Badge
+                                    badgeContent={cattLength}
+                                    color="primary"
+                                >
+                                    <ShoppingCartIcon
+                                        color="action"
+                                        fontSize="large"
+                                    />
+                                </Badge>
+                            </Item>
+                        </Link>
                     </Grid>
                 </Grid>
             </Container>

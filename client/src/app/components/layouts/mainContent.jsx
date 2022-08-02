@@ -12,6 +12,7 @@ import MainPage from "../pages/mainPage";
 import SignPage from "../pages/signs/signPage";
 import RegisterForm from "../ui/registredForm";
 import LoginForm from "../ui/loginForm";
+import Cart from "../ui/cart/cart";
 
 const MainContent = () => {
   return (
@@ -34,6 +35,7 @@ const MainContent = () => {
             <Route path="flash" element={<FlashlightsPage />} />
             <Route path="signup" element={<RegisterForm />} />
             <Route path="login" element={<LoginForm />} />
+            <Route path="kart" element={<Cart />} />
           </Routes>
         </Grid>
       </Grid>
