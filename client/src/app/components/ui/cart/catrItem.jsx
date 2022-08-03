@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
+import { useSelector, useDispatch } from "react-redux";
+import { updateQuantity } from "../../../../store/cart";
 import * as signsImage from "../../../assets/img/signs/worning";
 const CartItem = ({ row, index }) => {
+  const dispatch = useDispatch();
   const [counter, setCounter] = useState(row.quantity);
   const [totalPrice, setTotalPrice] = useState(counter * row.price);
   const getName = (item) => {
@@ -16,7 +19,9 @@ const CartItem = ({ row, index }) => {
   };
   useEffect(() => {
     setTotalPrice(counter * row.price);
-  }, [counter]);
+    dispatch(updateQuantity(row._id, counter));
+  }, [counter, dispatch, row._id, row.price]);
+
   const increment = () => {
     setCounter(counter + 1);
   };
