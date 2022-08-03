@@ -31,6 +31,13 @@ const cartSlice = createSlice({
       );
       state.entities[index].quantity = action.payload.counter;
     },
+    cartItemDeleted: (state, action) => {
+      const delCart = state.entities.filter(
+        (item) => item._id !== action.payload
+      );
+      console.log("del", delCart);
+      state.entities = delCart;
+    },
   },
 });
 
@@ -41,11 +48,17 @@ const {
   quantityUbdated,
   cartReceived,
   cartRequestFailed,
+  cartItemDeleted,
 } = actions;
 
 export const ubdateCart = (item) => async (dispatch, getState) => {
   dispatch(cartUbdated(item));
 
+  dispatch(totalPriceUddated());
+};
+
+export const deleteCartItem = (_id) => async (dispatch, getState) => {
+  dispatch(cartItemDeleted(_id));
   dispatch(totalPriceUddated());
 };
 

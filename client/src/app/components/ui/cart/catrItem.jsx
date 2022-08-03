@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
-import { updateQuantity } from "../../../../store/cart";
+import { updateQuantity, deleteCartItem } from "../../../../store/cart";
 import * as signsImage from "../../../assets/img/signs/worning";
 const CartItem = ({ row, index }) => {
   const dispatch = useDispatch();
@@ -28,6 +30,9 @@ const CartItem = ({ row, index }) => {
   const decrement = () => {
     if (counter > 0) setCounter(counter - 1);
   };
+  const handleDelite = () => {
+    dispatch(deleteCartItem(row._id));
+  };
 
   return (
     <TableRow>
@@ -48,7 +53,13 @@ const CartItem = ({ row, index }) => {
         </div>
       </TableCell>
       <TableCell align="center">{row.price}</TableCell>
+
       <TableCell align="center">{totalPrice}</TableCell>
+      <TableCell align="center">
+        <IconButton onClick={handleDelite}>
+          <DeleteForeverIcon color="error" />
+        </IconButton>
+      </TableCell>
     </TableRow>
   );
 };

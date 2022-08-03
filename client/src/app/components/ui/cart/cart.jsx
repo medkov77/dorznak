@@ -59,7 +59,7 @@ const Cart = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography variant="h5" component={"h3"} align={"end"}>
+      <Typography variant="h5" component={"h3"} align={"right"}>
         ИТОГО: {total}р
       </Typography>
     </>
