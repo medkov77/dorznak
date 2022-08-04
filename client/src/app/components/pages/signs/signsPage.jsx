@@ -9,11 +9,12 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { getPriceList } from "../../../../store/priceList";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { ubdateCart } from "../../../../store/cart";
+import { ubdateCart, getcartList } from "../../../../store/cart";
 import * as signsImage from "../../../assets/img/signs/worning/";
 const SignsPage = ({
   id,
@@ -28,21 +29,26 @@ const SignsPage = ({
   const dispatch = useDispatch();
   const priceList = useSelector(getPriceList());
   const signsPiceList = priceList.find((item) => item.name === "signs");
-
+  const cartList = useSelector(getcartList());
+  const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = useState({ size: "2", filmeType: "aCom" });
+
   const [price, setPrice] = useState(
     signsPiceList.form[form].size[data.size][data.filmeType]
   );
 
   const handleChange = ({ target }) => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
-
-    console.log(data);
   };
+
   useEffect(() => {
     setPrice(signsPiceList.form[form].size[data.size][data.filmeType]);
   }, [data]);
   const handleAddCart = () => {
+    if (cartList.findIndex((item) => item._id === id) !== -1) {
+      enqueueSnackbar("Товар уже в корзине", { variant: "warning" });
+      return;
+    }
     dispatch(
       ubdateCart({
         _id: id,

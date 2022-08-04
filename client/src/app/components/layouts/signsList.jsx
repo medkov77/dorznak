@@ -1,7 +1,9 @@
 import SignsPage from "../pages/signs/signsPage";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Item from "@mui/material/Grid";
 import { Grid, Typography } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSignsList,
@@ -17,6 +19,13 @@ const SignsList = () => {
 
   const loading = useSelector(getSignsLoadingStatus());
   const signsList = useSelector(getSignsList());
+
+  const [page, setPage] = useState(1);
+
+  const handleChangePage = ({ target }) => {
+    setPage(target.value);
+  };
+
   if (loading) return "Loading";
   return (
     <>
@@ -41,6 +50,15 @@ const SignsList = () => {
           </Grid>
         ))}
       </Grid>
+      <Stack spacing={2} my={5}>
+        <Pagination
+          count={10}
+          variant="outlined"
+          shape="rounded"
+          page={page}
+          onChange={handleChangePage}
+        />
+      </Stack>
     </>
   );
 };
