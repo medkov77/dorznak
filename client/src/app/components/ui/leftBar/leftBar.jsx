@@ -10,8 +10,8 @@ import flashlight from "../../../assets/img/flashlight/flashlight.jpg";
 import LeftBarItem from "./leftBarItem";
 const LeftBar = () => {
   const leftBarItems = [
-    { title: "Основы дорожных знаков", src: basics, link: "/base" },
     { title: "Знаки дорожные", src: signs, link: "/signs" },
+    { title: "Основы дорожных знаков", src: basics, link: "/base" },
     { title: "Светодиодные знаки", src: led, link: "/led" },
     { title: "Лежачие полицейские", src: idn, link: "/idn" },
     { title: "Оборудование для парковок", src: parking, link: "/parking" },

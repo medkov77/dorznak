@@ -13,7 +13,8 @@ import SignPage from "../pages/signs/signPage";
 import RegisterForm from "../ui/registredForm";
 import LoginForm from "../ui/loginForm";
 import Cart from "../ui/cart/cart";
-
+import SignLoader from "../ui/hoc/signLoader";
+import AdminPage from "../pages/admin/adminPage";
 const MainContent = () => {
   return (
     <Container maxWidth="xl">
@@ -26,7 +27,14 @@ const MainContent = () => {
             <Route path="/" element={<MainPage />} />
             <Route path="signs" element={<SignsList />} />
 
-            <Route path="signs/:id/:size/:film" element={<SignPage />} />
+            <Route
+              path="signs/:id/:size/:film"
+              element={
+                <SignLoader>
+                  <SignPage />
+                </SignLoader>
+              }
+            />
 
             <Route path="base" element={<BaseOfSingnsPage />} />
             <Route path="led" element={<LedSignsPage />} />
@@ -36,6 +44,7 @@ const MainContent = () => {
             <Route path="signup" element={<RegisterForm />} />
             <Route path="login" element={<LoginForm />} />
             <Route path="kart" element={<Cart />} />
+            <Route path="admin" element={<AdminPage />} />
           </Routes>
         </Grid>
       </Grid>

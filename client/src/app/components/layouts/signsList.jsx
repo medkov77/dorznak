@@ -9,29 +9,39 @@ import {
   getSignsList,
   getSignsLoadingStatus,
   loadSigns,
+  getListSize,
 } from "../../../store/signs";
-
+import configFile from "../../../config.json";
+import Search from "../ui/seasch";
 const SignsList = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(loadSigns());
-  }, [dispatch]);
-
-  const loading = useSelector(getSignsLoadingStatus());
-  const signsList = useSelector(getSignsList());
 
   const [page, setPage] = useState(1);
+  useEffect(() => {
+    dispatch(loadSigns(page));
+  }, [dispatch, page]);
+  const limit = configFile.limit;
+  const loading = useSelector(getSignsLoadingStatus());
+  const signsList = useSelector(getSignsList());
+  const listSize = Math.floor(useSelector(getListSize()) / limit) + 1;
 
-  const handleChangePage = ({ target }) => {
-    setPage(target.value);
+  const handleChangePage = (a, value) => {
+    console.log(a);
+    setPage(value);
   };
 
   if (loading) return "Loading";
   return (
     <>
-      <Typography variant="h4" component={"h2"} sx={{ textAlign: "center" }}>
+      <Typography
+        variant="h4"
+        component={"h2"}
+        mb={2}
+        sx={{ textAlign: "center" }}
+      >
         Знаки дорожные ГОСТ 52290-2004
       </Typography>
+      <Search />
       <Grid container spacing={3} mt={2}>
         {signsList.map((sign) => (
           <Grid key={sign._id} item xs={4}>
@@ -52,7 +62,7 @@ const SignsList = () => {
       </Grid>
       <Stack spacing={2} my={5}>
         <Pagination
-          count={10}
+          count={listSize}
           variant="outlined"
           shape="rounded"
           page={page}
