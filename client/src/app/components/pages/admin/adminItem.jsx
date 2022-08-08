@@ -6,16 +6,18 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
-import { updateQuantity, deleteCartItem } from "../../../../store/cart";
+import { deleteSign } from "../../../../store/signs";
 import * as signsImage from "../../../assets/img/signs/worning";
-import EditSign from "./editSign";
-const AdminItem = ({ row, index }) => {
-  const dispatch = useDispatch();
 
+import { useNavigate, useParams } from "react-router-dom";
+const AdminItem = ({ row, index, onDelete }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleDelite = () => {
-    dispatch(deleteCartItem(row._id));
+    dispatch(deleteSign(row._id)).then(onDelete(row._id));
   };
-  const handleClick = () => {
+  const handleEdit = () => {
+    navigate(`/edit/${row._id}`);
     return;
   };
   return (
@@ -30,7 +32,7 @@ const AdminItem = ({ row, index }) => {
       </TableCell>
 
       <TableCell align="right">
-        <Button variant="contained" onClick={handleClick}>
+        <Button variant="contained" onClick={handleEdit}>
           Редактировать
         </Button>
       </TableCell>

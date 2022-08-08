@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getIsLoggedIn } from "../../../../store/users";
 import Paper from "@mui/material/Paper";
@@ -15,24 +15,28 @@ import {
   getSignsLoadingStatus,
 } from "../../../../store/signs";
 import AdminItem from "./adminItem";
+import Loader from "../../common/table/loader";
 const AdminPage = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(getIsLoggedIn());
+  const [signsList, setSignList] = useState([]);
 
+  const init = useSelector(getSignsList());
   useEffect(() => {
-    dispatch(loadSigns("all"));
-  }, [dispatch]);
-  const signsList = useSelector(getSignsList());
-  const loading = useSelector(getSignsLoadingStatus());
-  console.log(signsList);
+    setSignList(init);
+  }, [init]);
+
+  const handleDelete = (_id) => {
+    setSignList(signsList.filter((sign) => sign._id !== _id));
+  };
   if (!isLoggedIn)
     return (
       <Typography variant="h6" mt={2}>
         Эта страница только для зарегистрированных пользователей
       </Typography>
     );
-  if (loading) {
-    return "...Loading";
+  if (signsList.length === 0) {
+    return <Loader />;
   } else {
     return (
       <TableContainer component={Paper}>
@@ -75,7 +79,12 @@ const AdminPage = () => {
             }}
           >
             {signsList.map((row, index) => (
-              <AdminItem row={row} index={index} key={"Admin" + row._id} />
+              <AdminItem
+                row={row}
+                onDelete={handleDelete}
+                index={index}
+                key={"Admin" + row._id}
+              />
             ))}
           </TableBody>
         </Table>

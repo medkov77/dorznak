@@ -15,6 +15,8 @@ import LoginForm from "../ui/loginForm";
 import Cart from "../ui/cart/cart";
 import SignLoader from "../ui/hoc/signLoader";
 import AdminPage from "../pages/admin/adminPage";
+import EditSign from "../pages/admin/editSign";
+import EditLoader from "../ui/hoc/editLoader";
 const MainContent = () => {
   return (
     <Container maxWidth="xl">
@@ -44,7 +46,23 @@ const MainContent = () => {
             <Route path="signup" element={<RegisterForm />} />
             <Route path="login" element={<LoginForm />} />
             <Route path="kart" element={<Cart />} />
-            <Route path="admin" element={<AdminPage />} />
+
+            <Route
+              path="admin"
+              element={
+                <EditLoader>
+                  <AdminPage />
+                </EditLoader>
+              }
+            />
+            <Route
+              path="edit/:id"
+              element={
+                <EditLoader>
+                  <EditSign />
+                </EditLoader>
+              }
+            />
           </Routes>
         </Grid>
       </Grid>

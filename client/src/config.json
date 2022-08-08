@@ -1,4 +1,4 @@
 {
-  "apiEndpoint": "http://81.163.29.249/api/",
-  "limit": 6
+    "apiEndpoint": "http://localhost:8080/api/",
+    "limit": 6
 }

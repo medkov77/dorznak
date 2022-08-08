@@ -3,17 +3,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, getIsLoggedIn, getAuthError } from "../../../../store/users";
 import { Paper } from "@mui/material";
 import { Box, Typography } from "@mui/material";
-
-import TextField from "@mui/material/TextField";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
 import IconButton from "@mui/material/IconButton";
-
+import TextInput from "../../common/table/textInput";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { useNavigate } from "react-router-dom";
-
-const EditSign = ({ sign }) => {
+import { useNavigate, useParams } from "react-router-dom";
+import { getSignsList } from "../../../../store/signs";
+import SelectUnstyled from "@mui/base/SelectUnstyled";
+import OptionUnstyled from "@mui/base/OptionUnstyled";
+const EditSign = ({}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const signsList = useSelector(getSignsList());
+  console.log(signsList);
+  const { id } = useParams();
+  console.log(id);
+  const sign = id
+    ? signsList.find((item) => item._id === id)
+    : {
+        gost: "",
+        name: "",
+        type: "",
+        form: "",
+        description: "",
+        imgSrc: "",
+      };
+
   const [data, setData] = useState({
     gost: sign.gost,
     name: sign.name,
@@ -45,18 +61,35 @@ const EditSign = ({ sign }) => {
     <Paper elevation={3} sx={{ padding: "1rem", mt: "5.2rem", px: 3 }}>
       <form onSubmit={handleSubmit}>
         <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-          <TextField
-            required
-            id="gost"
-            label="gost"
-            variant="standard"
-            fullWidth
+          <TextInput
+            name="gost"
             type="text"
             value={data.gost}
-            name="gost"
-            margin="dense"
-            onChange={(event) => handleChange(event)}
-            helperText="Номер знака по ГОСТ"
+            help="Номер знака по ГОСТ"
+            onChange={handleChange}
+            required={true}
+            label="Номер знака по ГОСТ"
+          />
+          <TextInput
+            name="name"
+            type="text"
+            value={data.name}
+            help="Наименоване"
+            onChange={handleChange}
+            required={true}
+            label="Наименование знака по ГОСТ"
+          />
+          <textarea placeholder={data.description}></textarea>
+          <SelectUnstyled>
+            <OptionUnstyled>Треугольник</OptionUnstyled>
+            <OptionUnstyled>{/* option two */}</OptionUnstyled>
+          </SelectUnstyled>
+          <TextInput
+            name="imgSrc"
+            type="text"
+            value={data.imgSrc}
+            help="Путь к изображению"
+            onChange={handleChange}
           />
         </Box>
       </form>
