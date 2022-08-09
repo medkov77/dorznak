@@ -55,6 +55,15 @@ const MainContent = () => {
                 </EditLoader>
               }
             />
+
+            <Route
+              path="edit"
+              element={
+                <EditLoader>
+                  <EditSign />
+                </EditLoader>
+              }
+            />
             <Route
               path="edit/:id"
               element={

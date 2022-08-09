@@ -9,16 +9,18 @@ import TextInput from "../../common/table/textInput";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSignsList } from "../../../../store/signs";
+import { getSignsList, updeteSign, addSign } from "../../../../store/signs";
 import SelectUnstyled from "@mui/base/SelectUnstyled";
 import OptionUnstyled from "@mui/base/OptionUnstyled";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 const EditSign = ({}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const signsList = useSelector(getSignsList());
-  console.log(signsList);
+  let signsList = useSelector(getSignsList());
   const { id } = useParams();
-  console.log(id);
   const sign = id
     ? signsList.find((item) => item._id === id)
     : {
@@ -47,9 +49,18 @@ const EditSign = ({}) => {
       [target.name]: target.value,
     }));
   };
-
+  const handleBack = () => {
+    navigate(-1);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (id) {
+      dispatch(updeteSign(id, data)).then(() => {
+        navigate(-1);
+      });
+    } else {
+      dispatch(addSign(data));
+    }
   };
   if (!isLoggedIn)
     return (
@@ -79,7 +90,13 @@ const EditSign = ({}) => {
             required={true}
             label="Наименование знака по ГОСТ"
           />
-          <textarea placeholder={data.description}></textarea>
+          <textarea
+            className="edit-area"
+            rows="5"
+            name="description"
+            defaultValue={data.description}
+            onChange={handleChange}
+          ></textarea>
           <SelectUnstyled>
             <OptionUnstyled>Треугольник</OptionUnstyled>
             <OptionUnstyled>{/* option two */}</OptionUnstyled>
@@ -91,6 +108,36 @@ const EditSign = ({}) => {
             help="Путь к изображению"
             onChange={handleChange}
           />
+          <FormControl fullWidth sx={{ marginTop: "1rem" }}>
+            <InputLabel id="form">Форма знака</InputLabel>
+            <Select
+              labelId="form"
+              id="demo-simple-select"
+              value={data.form}
+              label="form"
+              onChange={handleChange}
+              name="form"
+            >
+              <MenuItem value="triangle">Треугольник</MenuItem>
+              <MenuItem value="square">Квадрат</MenuItem>
+              <MenuItem value="round">Круг</MenuItem>
+              <MenuItem value="rectangle">Прямоугольник</MenuItem>
+            </Select>
+          </FormControl>
+          <Stack spacing={2} direction="row" justifyContent="flex-end" my={3}>
+            {id ? (
+              <Button variant="contained" type="submit">
+                Изменить
+              </Button>
+            ) : (
+              <Button variant="contained" type="submit">
+                Добавить
+              </Button>
+            )}
+            <Button variant="outlined" onClick={handleBack}>
+              Отмена
+            </Button>
+          </Stack>
         </Box>
       </form>
     </Paper>
