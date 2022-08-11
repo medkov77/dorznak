@@ -35,6 +35,16 @@ const signsSlice = createSlice({
     signDeleted: (state, action) => {
       state.CurrentSignisLoading = false;
     },
+    signUpdated: (state, action) => {
+      state.CurrentSignisLoading = false;
+      const id = action.payload._id;
+      const index = state.entities.findIndex((sign) => sign._id === id);
+      state.entities[index] = action.payload;
+    },
+    signAded: (state, action) => {
+      state.entities.push(action.payload);
+      state.CurrentSignisLoading = false;
+    },
   },
 });
 
@@ -46,16 +56,19 @@ const {
   currentSignsRequested,
   currentSignsReceived,
   signDeleted,
+  signUpdated,
+  signAded,
 } = actions;
-export const loadSigns = (page) => async (dispatch, getState) => {
-  dispatch(signsRequested);
-  try {
-    const { content } = await signsService.get(page);
-    dispatch(signsReceived(content));
-  } catch (error) {
-    dispatch(signsRequestFailed(error.message));
-  }
-};
+export const loadSigns =
+  (page, sort, direction, filter) => async (dispatch, getState) => {
+    dispatch(signsRequested);
+    try {
+      const { content } = await signsService.get(page, sort, direction, filter);
+      dispatch(signsReceived(content));
+    } catch (error) {
+      dispatch(signsRequestFailed(error.message));
+    }
+  };
 
 export const loadCurrentSign = (id) => async (dispatch, getState) => {
   dispatch(currentSignsRequested);
@@ -71,7 +84,7 @@ export const updeteSign = (id, update) => async (dispatch, getState) => {
   dispatch(currentSignsRequested);
   try {
     const { content } = await signsService.patch(id, update);
-    dispatch(currentSignsReceived(content));
+    dispatch(signUpdated(content));
   } catch (error) {
     dispatch(signsRequestFailed(error.message));
   }
@@ -81,7 +94,7 @@ export const addSign = (addDate) => async (dispatch, getState) => {
   dispatch(currentSignsRequested);
   try {
     const { content } = await signsService.put(addDate);
-    dispatch(currentSignsReceived(content));
+    dispatch(signAded(content));
   } catch (error) {
     dispatch(signsRequestFailed(error.message));
   }

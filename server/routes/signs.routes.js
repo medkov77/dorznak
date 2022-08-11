@@ -5,6 +5,9 @@ const router = express.Router({ mergeParams: true });
 router.get("/", async (req, res) => {
   const limit = req.query.limit;
   const page = req.query.page;
+  const sorted = req.query.sort;
+  const direction = req.query.direction;
+  const filter = req.query.filter;
 
   try {
     const size = (await Signs.find()).length;
@@ -13,12 +16,21 @@ router.get("/", async (req, res) => {
       res.status(200).send({ list: allList, size: size });
     } else {
       const skip = (page - 1) * limit;
-      const list = await Signs.find()
-        .sort({ _id: 1 })
-        .limit(limit)
-        .skip(skip)
-        .exec();
-      res.status(200).send({ list: list, size: size });
+      if (filter === "all") {
+        const list = await Signs.find()
+          .sort({ [sorted]: direction })
+          .limit(limit)
+          .skip(skip)
+          .exec();
+        res.status(200).send({ list: list, size: size });
+      } else {
+        const filtredList = await Signs.find({ form: `${filter}` })
+          .sort({ [sorted]: direction })
+          .limit(limit)
+          .skip(skip)
+          .exec();
+        res.status(200).send({ list: filtredList, size: filtredList.length });
+      }
     }
   } catch (e) {
     res.status(500).json({
@@ -86,7 +98,12 @@ router.patch("/:signId", async (req, res) => {
 });
 router.put("/", async (req, res) => {
   try {
-    const addedSign = await Signs.insertOne(req.body.payload);
+    const addedSign = await Signs.create({
+      sizes: [1, 2, 3, 4],
+      films: ["А", "Б", "В"],
+      type: "warning",
+      ...req.body.payload,
+    });
     res.status(200).send(addedSign);
   } catch (e) {
     res.status(500).json({

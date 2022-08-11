@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, getIsLoggedIn, getAuthError } from "../../../../store/users";
+import { getIsLoggedIn } from "../../../../store/users";
 import { Paper } from "@mui/material";
 import { Box, Typography } from "@mui/material";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import IconButton from "@mui/material/IconButton";
 import TextInput from "../../common/table/textInput";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -12,10 +10,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getSignsList, updeteSign, addSign } from "../../../../store/signs";
 import SelectUnstyled from "@mui/base/SelectUnstyled";
 import OptionUnstyled from "@mui/base/OptionUnstyled";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+
+import SelectedField from "../../common/table/selectedUFeld";
 const EditSign = ({}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,7 +22,6 @@ const EditSign = ({}) => {
     : {
         gost: "",
         name: "",
-        type: "",
         form: "",
         description: "",
         imgSrc: "",
@@ -59,7 +54,9 @@ const EditSign = ({}) => {
         navigate(-1);
       });
     } else {
-      dispatch(addSign(data));
+      dispatch(addSign(data)).then(() => {
+        navigate(-1);
+      });
     }
   };
   if (!isLoggedIn)
@@ -108,23 +105,21 @@ const EditSign = ({}) => {
             help="Путь к изображению"
             onChange={handleChange}
           />
-          <FormControl fullWidth sx={{ marginTop: "1rem" }}>
-            <InputLabel id="form">Форма знака</InputLabel>
-            <Select
-              labelId="form"
-              id="demo-simple-select"
-              value={data.form}
-              label="form"
-              onChange={handleChange}
+          <Stack spacing={2} direction="row" justifyContent="flex-start" my={3}>
+            <SelectedField
+              items={[
+                { name: "Треугольник", value: "triangle" },
+                { name: "Круг", value: "round" },
+                { name: "Квадрат", value: "square" },
+              ]}
+              label="Форма знака"
+              onSelect={handleChange}
               name="form"
-            >
-              <MenuItem value="triangle">Треугольник</MenuItem>
-              <MenuItem value="square">Квадрат</MenuItem>
-              <MenuItem value="round">Круг</MenuItem>
-              <MenuItem value="rectangle">Прямоугольник</MenuItem>
-            </Select>
-          </FormControl>
-          <Stack spacing={2} direction="row" justifyContent="flex-end" my={3}>
+              value={data.form}
+            />
+          </Stack>
+
+          <Stack spacing={2} direction="row" justifyContent="flex-end" m={3}>
             {id ? (
               <Button variant="contained" type="submit">
                 Изменить
